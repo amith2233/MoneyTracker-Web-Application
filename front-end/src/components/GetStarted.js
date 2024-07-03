@@ -29,7 +29,7 @@ function GetStarted()
 
     return (
         <div className='GetStarted'>
-            <div className='home-description'><h4>Take Control Of Your Money And Forecast Your <br/> <br/> <span className='second-line'>Spending Into The Future...</span></h4></div>
+            <div className='home-description'><h4>Take Control Of Your Money And Forecast Your <br/> <span className='second-line'>Spending Into The Future...</span></h4></div>
             <div className='home-signup'>
                 <input type='text' className='home-signup-email' value={email} name='username' placeholder='Your email address' onChange={handleChange}/>
                 <button type='button' onClick={handleStarted}>Get Started</button>

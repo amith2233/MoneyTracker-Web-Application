@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {MyContext} from "./MyContext";
-import {Alert, AlertTitle} from "@mui/material";
+import {Alert} from "@mui/material";
 function Profile()
 {
     const {token}=useContext(MyContext);
