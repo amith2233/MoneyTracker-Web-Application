@@ -19,7 +19,7 @@ function LineYear({budgetInfo})
             setLineData(aggregatedData);
         }
         console.log(lineData);
-    },[budgetInfo]);
+    },[lineData,budgetInfo]);
 
     useEffect(()=>{
             const width=600;
