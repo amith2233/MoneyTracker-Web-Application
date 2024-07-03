@@ -17,7 +17,7 @@ function Login({setToken})
      {
          setLoginData({...logindata,username:email});
      }
-    },[email]);
+    },[email,logindata]);
     const handleChange=(e)=>
     {
         setLoginData({...logindata,[e.target.name]:e.target.value});

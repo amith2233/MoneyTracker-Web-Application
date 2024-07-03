@@ -18,7 +18,7 @@ function BarMonth({budgetInfo,year})
             }));
             setBarData(monthData);
         }
-    },[budgetInfo]);
+    },[budgetInfo,year]);
     // console.log(barData);
     return (
         <div>
