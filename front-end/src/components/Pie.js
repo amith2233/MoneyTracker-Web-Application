@@ -2,18 +2,22 @@ import {useContext, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {MyContext} from "./MyContext";
 import * as d3 from 'd3';
-function Pie()
+function Pie({month,year})
 {
     const {token}=useContext(MyContext);
     const[monthExpenses,setMonthExpenses]=useState([]);
     const[pieData,setPieData]=useState([]);
     const ref=useRef();
+
     useEffect(()=>
         {
-
             axios.get("http://localhost:8080/expenses/month",{
                 headers:{
                     'Authorization':`Bearer ${token}`
+                },
+                params:{
+                    month:month,
+                    year:year
                 }
             })
                 .then((res)=>{
@@ -27,8 +31,10 @@ function Pie()
                 .catch((err)=>{
                     console.error(err);
                 });
-        },[token]);
+        },[token,month,year]);
 
+    // console.log(monthExpenses);
+    // console.log(year);
     useEffect(()=>{
         if(monthExpenses.length>0) {
             const groupedData = d3.group(monthExpenses, (d) => d.category);
@@ -39,6 +45,10 @@ function Pie()
             }));
             // console.log(aggregatedData);
             setPieData(aggregatedData);
+        }
+        else
+        {
+            setPieData([]);
         }
 
     },[monthExpenses]);
@@ -88,10 +98,16 @@ function Pie()
                 .attr('font-size','14px')
                 .text(d => d.data.category);
         }
+        else
+        {
+            d3.select(ref.current).selectAll('*').remove();
+        }
     },[pieData]);
 
  return (
-        <div className='pie-chart-month' ref={ref}>
+        <div className='pie-chart-month' >
+            <div ref={ref}></div>
+            {pieData.length===0 && <p>No data available for selected month and year</p>}
         </div>
 
    );

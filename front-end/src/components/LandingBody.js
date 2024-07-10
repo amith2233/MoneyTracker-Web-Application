@@ -4,11 +4,14 @@ import axios from "axios";
 import Pie from "./Pie";
 import Donut from "./Donut";
 import EditDialog from "./EditDialog";
+import {format} from "date-fns";
 function LandingBody()
 {
     const [budgetData,setBudgetData]=useState(null);
     const [isLoading,setIsLoading]=useState(true);
     const {token}=useContext(MyContext);
+    const currMonth=format(new Date(),"MMMM");
+    const currYear=new Date().getFullYear();
     // console.log(budgetData);
     useEffect(()=>
     {
@@ -49,7 +52,7 @@ function LandingBody()
     return (
         <div className='LandingBody'>
             <div className='item1'>
-                <Pie/>
+                <Pie month={currMonth} year={currYear}/>
             </div>
             <div className='item2'>
                 {isLoading?(

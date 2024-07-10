@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -87,12 +88,29 @@ public class ExpenseService {
         budgetRepository.save(budget);
 
     }
-    public List<Expense> getMonthExpenses()
+    public List<Expense> getMonthExpenses(String month)
     {
         String email=SecurityContextHolder.getContext().getAuthentication().getName();
         int id=userRepository.findByEmail(email).get().getUserid();
-        List<Expense> monthExpenses=expenseRepository.findByUserUserid(id).stream().filter(exp->exp.getDate().format(DateTimeFormatter.ofPattern("MMMM")).equals(LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM")))).collect(Collectors.toList());
+        List<Expense> monthExpenses=expenseRepository.findByUserUserid(id).stream().filter(exp->exp.getDate().format(DateTimeFormatter.ofPattern("MMMM")).equals(month)).collect(Collectors.toList());
         return monthExpenses;
+    }
+    public List<Expense> getYearExpenses(int year,String month)
+    {
+        String email=SecurityContextHolder.getContext().getAuthentication().getName();
+        int id=userRepository.findByEmail(email).get().getUserid();
+        int monthInt= Month.valueOf(month.toUpperCase()).getValue();
+        List<Expense> yearExpense=expenseRepository.findByUserUseridAndDateYear(id,year,monthInt);
+        System.out.println(yearExpense);
+        return yearExpense;
+    }
+    public List<String> getExpenseCategories()
+    {
+        String email=SecurityContextHolder.getContext().getAuthentication().getName();
+        int id=userRepository.findByEmail(email).get().getUserid();
+        List<String> categories=expenseRepository.findByDistinctCategories(id);
+        categories=categories.stream().map(cat->cat.substring(0,1).toUpperCase()+cat.substring(1)).collect(Collectors.toList());
+        return categories;
     }
     public Predicate<Expense> buildPredicate(Reports reports)
     {
@@ -129,8 +147,6 @@ public class ExpenseService {
         Predicate<Expense> predicate=buildPredicate(reports);
         List<Expense> expense= getExpensesOfUser();
         List<Expense> filteredExpense=expense.stream().filter(predicate).collect(Collectors.toList());
-        System.out.println(expense);
-        System.out.println(filteredExpense);
         return filteredExpense;
 
     }

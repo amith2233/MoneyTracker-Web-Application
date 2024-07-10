@@ -49,7 +49,7 @@ function Reports()
             <form className='reports-form' onSubmit={handleSubmit}>
             <div className='reports-form-top'>
                 <DatePicker sx={{minWidth:'120px'}} label='start-date' value={reports.startDate} onChange={(date)=>handleChange({target:{name:'startDate',value:date}})}/>
-                <DatePicker label='end-date' value={reports.endDate} name='endDate' onChange={(date)=>handleChange({target:{name:'endDate',value:date}})}/>
+                <DatePicker label='end-date' value={reports.endDate}  onChange={(date)=>handleChange({target:{name:'endDate',value:date}})}/>
 
                     <FormControl variant="standard" sx={{minWidth: 140 }}>
                         <InputLabel id="category-label">Category</InputLabel>
