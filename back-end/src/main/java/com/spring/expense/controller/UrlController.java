@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -118,10 +120,31 @@ public class UrlController {
         return expenseService.getExpenseReports(reports);
     }
 
-    @GetMapping("expenses/month")
-    public List<Expense> getMonthExpenses()
+//    @GetMapping("expenses/month")
+//    public List<Expense> getMonthExpenses(@RequestParam(required = false) String month)
+//    {
+//        if(month==null)
+//        {
+//            String currMonth=LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM"));
+//            return expenseService.getMonthExpenses(currMonth);
+//        }
+//        else
+//        {
+//            System.out.println(month);
+//            return expenseService.getMonthExpenses(month);
+//        }
+//
+//    }
+    @GetMapping("/expenses/month")
+    public List<Expense> getYearExpenses(@RequestParam int year,@RequestParam String month)
     {
-        return expenseService.getMonthExpenses();
+        return expenseService.getYearExpenses(year,month);
+    }
+
+    @GetMapping("/expenses/categories")
+    public List<String> getExpenseCategories()
+    {
+        return expenseService.getExpenseCategories();
     }
 
     @PostMapping("/budget/set")
@@ -165,6 +188,25 @@ public class UrlController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ne.getMessage());
         }
     }
+    @GetMapping("/budget/user")
+    public ResponseEntity<?> getBudgetInfo()
+    {
+        try
+        {
+            List<Budget> budgetInfo=budgetService.getBudgetInfo();
+            if(budgetInfo.isEmpty())
+            {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("no budget info" );
+            }
+            return ResponseEntity.ok(budgetInfo);
+        }
+        catch(RuntimeException re)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(re.getMessage());
+        }
+
+
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws BadCredentialsException {
@@ -182,6 +224,7 @@ public class UrlController {
         }
         final UserDetails userDetails=myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         String jwt=jwtUtil.generateToken(userDetails);
+        System.out.println(jwt);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
 
     }

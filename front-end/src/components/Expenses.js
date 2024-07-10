@@ -18,6 +18,7 @@ function Expenses()
     const[showButton,setShowButton]=useState(true);
     const [isAddVisible,setIsAddVisible]=useState(false);
     const [expenseToEdit,setExpenseToEdit]=useState(null);
+    const [categories,setCategories]=useState([]);
     const myNodeRef=useRef(null);
 
     const handleEdit=(exp)=>
@@ -46,6 +47,19 @@ function Expenses()
             .catch((error)=>{
                 console.log(error);
             })
+
+    },[token]);
+    useEffect(()=>{
+        axios.get("http://localhost:8080/expenses/categories", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res=>{
+            setCategories(res.data);
+        })
+            .catch((err)=>{
+                console.log(err);
+            });
 
     },[token]);
     const handleAdd=(e)=>
@@ -86,10 +100,14 @@ function Expenses()
             </div>
             <div className='all-expenses'>
                 <select className='category-dropdown' value={category} onChange={handleChange}>
+
                     <option value="">All Expenses</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="food">Food</option>
-                    <option value="groceries">Groceries</option>
+                    {categories.map((cat)=>(
+                        <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                    {/*<option value="shopping">Shopping</option>*/}
+                    {/*<option value="food">Food</option>*/}
+                    {/*<option value="groceries">Groceries</option>*/}
                 </select>
             </div>
 

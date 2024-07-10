@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/budget/check").hasRole("USER")
                                 .requestMatchers("/expenses/month").hasRole("USER")
                                 .requestMatchers("/budget/user").hasRole("USER")
+                                .requestMatchers("/expenses/categories").hasRole("USER")
                                 .anyRequest().authenticated()
 
                         )
